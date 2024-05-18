@@ -1,51 +1,56 @@
-#include<structs.h>
+#include "structs.h"
+#include "parse_memory_allocation.c"
+#include "internal_frag_analyzer.c"
+#include "external_frag_analyzer.c"
+// Function prototypes for automated input
+void automate_fixed_size_input();
+void automate_dynamic_size_input();
 
+int main() {
+    // Test Case 1: Fixed-Size Memory Allocation
+    automate_fixed_size_input();
 
+    // Test Case 2: Dynamic-Size Memory Allocation
+    automate_dynamic_size_input();
 
-int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s <memory_allocation_table>\n", argv[0]);
-        return EXIT_FAILURE;
-    }
-
-    // Parse memory allocation table
-    MemoryTable table = parse_memory_allocation_table(argv[1]);
-
-    // Analyze fragmentation
-    analyze_fragmentation(&table);
-
-    // Visualize fragmentation
-    visualize_fragmentation(&table);
-
-    // Generate report
-    generate_report(&table);
-
-    // Suggest optimizations
-    suggest_optimizations(&table);
-
-    // Clean up
-    free(table.blocks);
-
-    return EXIT_SUCCESS;
+    return 0;
 }
 
-// Function implementations
-MemoryTable parse_memory_allocation_table(const char *file_path) {
-    // Implement parsing logic here
+void automate_fixed_size_input() {
+    printf("Test Case 1: Fixed-Size Memory Allocation\n");
+
+    // Simulate user input for fixed-size memory allocation
+    MemoryTable table1;
+    table1.is_fixed = true;
+    table1.count = 0;
+    table1.blocks = NULL;
+
+    table1.memory_size = 100;
+    table1.frame_size = 10;
+
+    insert_in_memory_fixed(&table1, 10, 20);
+    insert_in_memory_fixed(&table1, 50, 15);
+
+    // Perform analysis
+    internal_frag_analyzer(&table1);
+    free(table1.blocks); // Free dynamically allocated memory
 }
 
-void analyze_fragmentation(const MemoryTable *table) {
-    // Implement fragmentation analysis here
-}
+void automate_dynamic_size_input() {
+    printf("Test Case 2: Dynamic-Size Memory Allocation\n");
 
-void visualize_fragmentation(const MemoryTable *table) {
-    // Implement visualization logic here
-}
+    // Simulate user input for dynamic-size memory allocation
+    MemoryTable table2;
+    table2.is_fixed = false;
+    table2.count = 0;
+    table2.blocks = NULL;
 
-void generate_report(const MemoryTable *table) {
-    // Implement report generation here
-}
+    table2.memory_size = 100;
 
-void suggest_optimizations(const MemoryTable *table) {
-    // Implement optimization suggestions here
+    insert_in_memory_dynamic(&table2, 10, 20);
+    insert_in_memory_dynamic(&table2, 40, 15);
+
+    // Perform analysis
+    external_frag_analyzer(&table2);
+    free(table2.blocks); // Free dynamically allocated memory
 }
