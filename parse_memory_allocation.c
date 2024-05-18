@@ -77,22 +77,36 @@ void fixed_size_alloc_table(MemoryTable *table)
     }
 }
 
-bool insert_in_memory_fixed(MemoryTable *table, unsigned long start_addr, unsigned long size)
-{
+bool insert_in_memory_fixed(MemoryTable *table, unsigned long start_addr, unsigned long size) {
     unsigned long frame_sz = table->frame_size;
     unsigned long index = start_addr / frame_sz;
+
     // Check if index is valid
-    if (index >= table->count)
-    {
+    if (index >= table->count) {
         printf("Error: Start address out of range.\n");
         return false;
     }
 
     // Check if the frame is available
-    if (table->blocks[index].is_used)
-    {
+    if (table->blocks[index].is_used) {
         printf("Error: Frame at start address %lu is already in use.\n", start_addr);
         return false;
+    }
+
+    // Check if there is enough space for the data
+    unsigned long end_addr = start_addr + size - 1;
+    if (end_addr >= table->memory_size) {
+        printf("Error: Allocation exceeds memory size.\n");
+        return false;
+    }
+
+    // Check if the data will overlap with existing memory blocks
+    for (unsigned long i = start_addr; i <= end_addr; i++) {
+        unsigned long block_index = i / frame_sz;
+        if (table->blocks[block_index].is_used) {
+            printf("Error: Data overlaps with existing memory block at start address %lu.\n", i);
+            return false;
+        }
     }
 
     // Update memory block properties
@@ -102,6 +116,7 @@ bool insert_in_memory_fixed(MemoryTable *table, unsigned long start_addr, unsign
     printf("Data successfully inserted into memory at start address %lu.\n", start_addr);
     return true;
 }
+
 
 void dynamic_size_alloc_table(MemoryTable *table)
 {
