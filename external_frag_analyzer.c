@@ -4,7 +4,7 @@
 //We would need to calculate the total fragmentation, and find all the free holes in the memory table.
 //Each block is an allocated variable partition of memory
 
-//Function to analyze external fragmentation and suggest improvements
+// Function to analyze external fragmentation and suggest improvements
 void external_frag_analyzer(MemoryTable *table) {
     // Check if the table is empty
     if (table->count < 1) {
@@ -15,7 +15,7 @@ void external_frag_analyzer(MemoryTable *table) {
     unsigned long total_external_fragmentation = 0;
     int num_free_holes = 0;
     unsigned long hole_size = 0;
-    unsigned long *free_holes = NULL; // Array for free hole sizes
+    unsigned long *free_hole_sizes = NULL; // Array for free hole sizes
 
     // Calculate external fragmentation and collect statistics
     for (int i = 0; i < table->count - 1; i++) {
@@ -23,12 +23,12 @@ void external_frag_analyzer(MemoryTable *table) {
         hole_size = table->blocks[i + 1].start_address_allocated - (table->blocks[i].start_address_allocated + table->blocks[i].allocated_size);
         if (hole_size > 0) {
             // Dynamically reallocate array to include one extra hole
-            free_holes = (unsigned long *)realloc(free_holes, (num_free_holes + 1) * sizeof(unsigned long));
-            if (free_holes == NULL) {
+            free_hole_sizes = (unsigned long *)realloc(free_hole_sizes, (num_free_holes + 1) * sizeof(unsigned long));
+            if (free_hole_sizes == NULL) {
                 printf("Memory allocation failed.\n");
                 return; // Exit function if memory allocation fails
             }
-            free_holes[num_free_holes] = hole_size;
+            free_hole_sizes[num_free_holes] = hole_size;
             total_external_fragmentation += hole_size;
             num_free_holes++;
         }
@@ -50,11 +50,11 @@ void external_frag_analyzer(MemoryTable *table) {
         } else {
             // Free hole
             printf("%lu\t\t", current_address);
-            for (unsigned long j = 0; j < hole_sizes[i]; j++) {
+            for (unsigned long j = 0; j < free_hole_sizes[i]; j++) {
                 printf("."); // Print '.' for free memory cell within the hole
             }
             printf("\n");
-            current_address += hole_sizes[i];
+            current_address += free_hole_sizes[i];
         }
     }
 
@@ -68,7 +68,7 @@ void external_frag_analyzer(MemoryTable *table) {
     // Calculate average hole size
     unsigned long total_hole_size = 0;
     for (int i = 0; i < num_free_holes; i++) {
-        total_hole_size += free_holes[i];
+        total_hole_size += free_hole_sizes[i];
     }
     unsigned long avg_hole_size = num_free_holes > 0 ? total_hole_size / num_free_holes : 0;
 
@@ -80,7 +80,7 @@ void external_frag_analyzer(MemoryTable *table) {
     printf("Average Hole Size: %lu bytes\n", avg_hole_size);
     printf("Free Hole Sizes:\n");
     for (int i = 0; i < num_free_holes; i++) {
-        printf("%d. %lu bytes\n", i + 1, free_holes[i]);
+        printf("%d. %lu bytes\n", i + 1, free_hole_sizes[i]);
     }
 
     // Optimization suggestions for external fragmentation
@@ -105,5 +105,6 @@ void external_frag_analyzer(MemoryTable *table) {
         printf("   Current allocation strategy seems suitable. Block sizes are larger than hole sizes on average.\n");
     }
     // Clean up allocated memory
-    free(free_holes);
+    free(free_hole_sizes);
 }
+
