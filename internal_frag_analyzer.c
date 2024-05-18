@@ -1,4 +1,48 @@
 #include<structs.h>
+// Function to visualize memory layout and frame boundaries
+void visualize_memory(MemoryTable *table) {
+    unsigned long current_address = 0;
+    unsigned long current_frame_start = 0;
+
+    printf("Memory Layout Visualization:\n");
+
+    // Iterate through each block and print its graphical representation
+    for (int i = 0; i < table->count; i++) {
+        if (current_address >= current_frame_start + table->frame_size) {
+            // Reached the end of a frame
+            printf("|");
+            for (unsigned long j = 0; j < table->frame_size; j++) {
+                printf("-");
+            }
+            printf("|\n");
+            current_frame_start = current_address;
+        }
+
+        // Print block details
+        if (table->blocks[i].is_used) {
+            printf("|");
+            for (unsigned long j = current_address; j < current_address + table->blocks[i].allocated_size; j++) {
+                printf("#");
+            }
+            printf("|\n");
+        } else {
+            printf("|");
+            for (unsigned long j = current_address; j < current_address + table->blocks[i].allocated_size; j++) {
+                printf(" ");
+            }
+            printf("|\n");
+        }
+
+        current_address += table->blocks[i].allocated_size;
+    }
+
+    // Print the last frame boundary
+    printf("|");
+    for (unsigned long j = 0; j < table->frame_size; j++) {
+        printf("-");
+    }
+    printf("|\n");
+}
 // Function to analyze internal fragmentation and suggest improvements
 void internal_frag_analyzer(MemoryTable *table) {
     int num_blocks = table->count;
@@ -47,51 +91,6 @@ void internal_frag_analyzer(MemoryTable *table) {
         printf("1. No Immediate Optimizations Needed:\n");
         printf("   Explanation: Internal fragmentation is within acceptable limits.\n");
     }
-
     // Clean up allocated memory
     free(internal_frag);
-}
-// Function to visualize memory layout and frame boundaries
-void visualize_memory(MemoryTable *table) {
-    unsigned long current_address = 0;
-    unsigned long current_frame_start = 0;
-
-    printf("Memory Layout Visualization:\n");
-
-    // Iterate through each block and print its graphical representation
-    for (int i = 0; i < table->count; i++) {
-        if (current_address >= current_frame_start + table->frame_size) {
-            // Reached the end of a frame
-            printf("|");
-            for (unsigned long j = current_frame_start; j < current_address; j++) {
-                printf("-");
-            }
-            printf("|\n");
-            current_frame_start = current_address;
-        }
-
-        // Print block details
-        if (table->blocks[i].is_used) {
-            printf("|");
-            for (unsigned long j = current_address; j < current_address + table->blocks[i].allocated_size; j++) {
-                printf("#");
-            }
-            printf("|\n");
-        } else {
-            printf("|");
-            for (unsigned long j = current_address; j < current_address + table->blocks[i].allocated_size; j++) {
-                printf(" ");
-            }
-            printf("|\n");
-        }
-
-        current_address += table->blocks[i].allocated_size;
-    }
-
-    // Print the last frame boundary
-    printf("|");
-    for (unsigned long j = current_frame_start; j < current_address; j++) {
-        printf("-");
-    }
-    printf("|\n");
 }
