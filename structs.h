@@ -11,5 +11,5 @@ typedef struct {
 typedef struct {
     unsigned long frame_size;
     MemoryBlock *blocks;
-    size_t count;
+    int count;
 } MemoryTable;
