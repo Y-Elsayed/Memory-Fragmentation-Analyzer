@@ -1,5 +1,14 @@
 #include "structs.h"
 
+
+// Function prototypes
+MemoryTable parse_memory_allocation();
+bool insert_in_memory_fixed(MemoryTable *table, unsigned long start_addr, unsigned long size);
+void fixed_size_alloc_table(MemoryTable *table);
+void dynamic_size_alloc_table(MemoryTable *table);
+bool insert_in_memory_dynamic(MemoryTable *table, unsigned long start_addr, unsigned long size);
+
+
 MemoryTable parse_memory_allocation()
 {
     MemoryTable table;
@@ -9,7 +18,6 @@ MemoryTable parse_memory_allocation()
 
     // unsigned long allocated_size;
     char user_ans;
-     char user_ans;
     printf("Is your allocated memory blocks fixed or Dynamic Sized:\n (f for fixed | d for dynamic)\n");
     scanf(" %c", &user_ans);
 
@@ -56,7 +64,7 @@ void fixed_size_alloc_table(MemoryTable *table)
         unsigned long size;
         scanf("Starting address of the process (0 - %d)\n=> %lu", table->memory_size - 1, start_addr);
         scanf("Size of the allocation\n=>%lu", &size);
-        if (insert_in_memory(memory_blocks, start_addr, size))
+        if (insert_in_memory_fixed(table, start_addr, size))
         {
             printf("Allocation Successful\n");
         }
@@ -109,7 +117,7 @@ void dynamic_size_alloc_table(MemoryTable *table)
         unsigned long size;
         scanf("Starting address of the process (0 - %d)\n=> %lu", table->memory_size - 1, start_addr);
         scanf("Size of the allocation\n=>%lu", &size);
-        if (insert_in_memory_dynamic(memory_blocks, start_addr, size))
+        if (insert_in_memory_dynamic(table, start_addr, size))
         {
             printf("Allocation Successful\n");
         }
