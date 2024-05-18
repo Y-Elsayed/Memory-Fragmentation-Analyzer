@@ -63,7 +63,7 @@ void visualize_memory(MemoryTable *table) {
         if (current_address >= current_frame_start + table->frame_size) {
             // Reached the end of a frame
             printf("|");
-            for (unsigned long j = current_frame_start; j < current_address; j++) {
+            for (unsigned long j = 0; j < table->frame_size; j++) {
                 printf("-");
             }
             printf("|\n");
@@ -90,7 +90,7 @@ void visualize_memory(MemoryTable *table) {
 
     // Print the last frame boundary
     printf("|");
-    for (unsigned long j = current_frame_start; j < current_address; j++) {
+    for (unsigned long j = 0; j < table->frame_size; j++) {
         printf("-");
     }
     printf("|\n");
