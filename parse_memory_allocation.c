@@ -8,7 +8,6 @@ void fixed_size_alloc_table(MemoryTable *table);
 void dynamic_size_alloc_table(MemoryTable *table);
 bool insert_in_memory_dynamic(MemoryTable *table, unsigned long start_addr, unsigned long size);
 
-
 MemoryTable parse_memory_allocation()
 {
     MemoryTable table;
@@ -38,32 +37,35 @@ MemoryTable parse_memory_allocation()
 void fixed_size_alloc_table(MemoryTable *table)
 {
     unsigned long frame_size;
-    scanf("Memory Frame Size in MB: %lu", &frame_size);
-    unsigned long count = table->memory_size / table->frame_size;
+    printf("Memory Frame Size in MB: ");
+    scanf("%lu", &frame_size);
+    unsigned long count = table->memory_size / frame_size;
     table->count = count;
     table->frame_size = frame_size;
-    MemoryBlock *memory_blocks = table->blocks;
-    memory_blocks = malloc(sizeof(MemoryBlock) * count);
+    table->blocks = malloc(sizeof(MemoryBlock) * count);
 
     // Initialize the memory table
-    for (int i = 0; i < count; count++)
+    for (int i = 0; i < count; i++)
     {
-        memory_blocks[i].is_used = false;
-        memory_blocks[i].start_address_allocated = i * frame_size;
+        table->blocks[i].is_used = false;
+        table->blocks[i].start_address_allocated = i * frame_size;
     }
 
     char user_ans;
     while (1)
     {
-        scanf("Would like to write in the memory?\n=>%c", &user_ans);
+        printf("Would like to write in the memory? (y/n): ");
+        scanf(" %c", &user_ans);
         if (user_ans == 'n' || user_ans == 'N')
         {
             break;
         }
         unsigned long start_addr;
         unsigned long size;
-        scanf("Starting address of the process (0 - %d)\n=> %lu", table->memory_size - 1, start_addr);
-        scanf("Size of the allocation\n=>%lu", &size);
+        printf("Starting address of the process (0 - %lu): ", table->memory_size - 1);
+        scanf("%lu", &start_addr);
+        printf("Size of the allocation: ");
+        scanf("%lu", &size);
         if (insert_in_memory_fixed(table, start_addr, size))
         {
             printf("Allocation Successful\n");
@@ -103,20 +105,22 @@ bool insert_in_memory_fixed(MemoryTable *table, unsigned long start_addr, unsign
 
 void dynamic_size_alloc_table(MemoryTable *table)
 {
-    MemoryBlock *memory_blocks = table->blocks;
-    memory_blocks = malloc(sizeof(MemoryBlock) * 100); // 100 is an arbitrary number to initialize memory blocks
+    table->blocks = malloc(sizeof(MemoryBlock) * 100); // 100 is an arbitrary number to initialize memory blocks
     char user_ans;
     while (1)
     {
-        scanf("Would like to write in the memory?\n=>%c", &user_ans);
+        printf("Would like to write in the memory? (y/n): ");
+        scanf(" %c", &user_ans);
         if (user_ans == 'n' || user_ans == 'N')
         {
             break;
         }
         unsigned long start_addr;
         unsigned long size;
-        scanf("Starting address of the process (0 - %d)\n=> %lu", table->memory_size - 1, start_addr);
-        scanf("Size of the allocation\n=>%lu", &size);
+        printf("Starting address of the process (0 - %lu): ", table->memory_size - 1);
+        scanf("%lu", &start_addr);
+        printf("Size of the allocation: ");
+        scanf("%lu", &size);
         if (insert_in_memory_dynamic(table, start_addr, size))
         {
             printf("Allocation Successful\n");
@@ -141,8 +145,9 @@ bool insert_in_memory_dynamic(MemoryTable *table, unsigned long start_addr, unsi
     }
 
     // Update memory block properties
-    table->blocks[++table->count].is_used = true;
+    table->blocks[table->count].is_used = true;
     table->blocks[table->count].allocated_size = size;
+    table->count++; // Increment count after adding a new block
     printf("Data successfully inserted into memory at start address %lu.\n", start_addr);
     return true;
 }
