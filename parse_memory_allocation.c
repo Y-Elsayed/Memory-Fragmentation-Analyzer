@@ -5,27 +5,24 @@ MemoryTable parse_memory_allocation()
     MemoryTable table;
     table.is_fixed = true;
     table.count = 0;
+    table.blocks = NULL; // Initialize blocks to NULL
 
     // unsigned long allocated_size;
     char user_ans;
-    try : printf("Is your allocated memory blocks fixed or Dynamic Sized:\n (f for fixed | d for dynamic)\n")
-        ;
-    scanf("=> %c", &user_ans);
+     char user_ans;
+    printf("Is your allocated memory blocks fixed or Dynamic Sized:\n (f for fixed | d for dynamic)\n");
+    scanf(" %c", &user_ans);
 
-    scanf("Memory Total Size in MB\n=> %lu", &table.memory_size);
-    if (user_ans == 'f' || user_ans == 'F')
-    {
+    printf("Memory Total Size in MB\n");
+    scanf("%lu", &table.memory_size);
+
+    if (user_ans == 'f' || user_ans == 'F') {
         fixed_size_alloc_table(&table);
-    }
-    else if (user_ans == 'd' || user_ans == 'D')
-    {
+    } else if (user_ans == 'd' || user_ans == 'D') {
         table.is_fixed = false;
         dynamic_size_alloc_table(&table);
-    }
-    else
-    {
-        printf("Something is wrong with your answer!\n");
-        goto try;
+    } else {
+        printf("Invalid input. Defaulting to fixed size allocation.\n");
     }
     return table;
 }
@@ -100,7 +97,7 @@ void dynamic_size_alloc_table(MemoryTable *table)
 {
     MemoryBlock *memory_blocks = table->blocks;
     memory_blocks = malloc(sizeof(MemoryBlock) * 100); // 100 is an arbitrary number to initialize memory blocks
-   char user_ans;
+    char user_ans;
     while (1)
     {
         scanf("Would like to write in the memory?\n=>%c", &user_ans);
@@ -120,16 +117,15 @@ void dynamic_size_alloc_table(MemoryTable *table)
         {
             printf("Allocation Not Successful Try again\n");
         }
-    }   
+    }
 }
-
 
 bool insert_in_memory_dynamic(MemoryTable *table, unsigned long start_addr, unsigned long size)
 {
     // Check if index is valid
-    for(int i = 0; i< table-> count; i++)
+    for (int i = 0; i < table->count; i++)
     {
-        if(table->blocks[i].start_address_allocated <= start_addr && table->blocks[i].start_address_allocated+table->blocks[i].allocated_size >= start_addr )
+        if (table->blocks[i].start_address_allocated <= start_addr && table->blocks[i].start_address_allocated + table->blocks[i].allocated_size >= start_addr)
         {
             printf("There is a process in this memory address!\n");
             return false;
