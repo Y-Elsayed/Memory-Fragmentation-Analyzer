@@ -9,7 +9,9 @@ typedef struct {
 } MemoryBlock;
 
 typedef struct {
-    unsigned long frame_size;
+    unsigned long frame_size; // will only be used in case of fixed size
+    bool is_fixed; // flag for fixed/dynamic size
+    unsigned long memory_size;
     MemoryBlock *blocks;
     int count;
 } MemoryTable;
