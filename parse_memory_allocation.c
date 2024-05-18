@@ -37,10 +37,10 @@ MemoryTable parse_memory_allocation()
 
 void fixed_size_alloc_table(MemoryTable *table)
 {
-    unsigned long count = table->memory_size / table->frame_size;
-    table->count = count;
     unsigned long frame_size;
     scanf("Memory Frame Size in MB: %lu", &frame_size);
+    unsigned long count = table->memory_size / table->frame_size;
+    table->count = count;
     table->frame_size = frame_size;
     MemoryBlock *memory_blocks = table->blocks;
     memory_blocks = malloc(sizeof(MemoryBlock) * count);
