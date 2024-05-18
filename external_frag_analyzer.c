@@ -1,4 +1,4 @@
-#include<structs.h>
+#include "structs.h"
 //We will use this in variable partitioning
 //Iterate over the whole table, and as we go find empty holes (external fragmentation).
 //We would need to calculate the total fragmentation, and find all the free holes in the memory table.
