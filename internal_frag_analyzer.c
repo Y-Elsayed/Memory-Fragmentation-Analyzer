@@ -56,7 +56,7 @@ void internal_frag_analyzer(MemoryTable *table) {
     // Calculate internal fragmentation for each block and collect statistics
     for (int i = 0; i < num_blocks; i++) {
         if (table->blocks[i].is_used) {
-            internal_frag[i] = table->blocks[i].allocated_size;
+            internal_frag[i] = table->frame_size - table->blocks[i].allocated_size;
             total_internal_frag += internal_frag[i];
             if (internal_frag[i] > threshold) {
                 blocks_above_threshold++;
