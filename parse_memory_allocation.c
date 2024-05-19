@@ -20,7 +20,7 @@ MemoryTable parse_memory_allocation()
     printf("Is your allocated memory blocks fixed or Dynamic Sized:\n (f for fixed | d for dynamic)\n");
     scanf(" %c", &user_ans);
 
-    printf("Memory Total Size in MB\n");
+    printf("Memory Total Size in bytes\n");
     scanf("%lu", &table.memory_size);
 
     if (user_ans == 'f' || user_ans == 'F') {
@@ -38,7 +38,7 @@ MemoryTable parse_memory_allocation()
 void fixed_size_alloc_table(MemoryTable *table)
 {
     unsigned long frame_size;
-    printf("Memory Frame Size in MB: ");
+    printf("Memory Frame Size in bytes: ");
     scanf("%lu", &frame_size);
     unsigned long count = table->memory_size / frame_size;
     table->count = count;
@@ -109,7 +109,7 @@ bool insert_in_memory_fixed(MemoryTable *table, unsigned long start_addr, unsign
 
 
 void dynamic_size_alloc_table(MemoryTable *table) {
-    table->blocks = malloc(sizeof(MemoryBlock) * 100); // 100 is an arbitrary number to initialize memory blocks
+    table->blocks = malloc(sizeof(MemoryBlock) * 100); // 100 is an arbitrary nubyteser to initialize memory blocks
     if (table->blocks == NULL) {
         fprintf(stderr, "Memory allocation for blocks failed.\n");
         return;
