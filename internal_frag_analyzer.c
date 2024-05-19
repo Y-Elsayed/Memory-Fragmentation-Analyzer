@@ -79,7 +79,7 @@ void internal_frag_analyzer(MemoryTable *table) {
     // Print internal fragmentation statistics
     printf("Total Internal Fragmentation: %lu bytes\n", total_internal_frag);
     printf("Average Internal Fragmentation: %lu bytes\n", avg_internal_frag);
-    printf("Blocks with Internal Fragmentation above Threshold: %d\n", blocks_above_threshold);
+    printf("Blocks with Internal Fragmentation above 50%: %d\n", blocks_above_threshold);
 
     // Suggest reducing block size if many blocks have high internal fragmentation
     if (blocks_above_threshold > num_blocks / 2) {
