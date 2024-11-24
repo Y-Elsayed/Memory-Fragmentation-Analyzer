@@ -20,5 +20,3 @@ A **C-based proof-of-concept tool** designed to detect and analyze memory fragme
   - Memory compaction
   - Alternative allocation strategies (e.g., best-fit, first-fit)
 
-## Example Input
-Provide a memory scenario with allocation and deallocation requests. Example format:
